@@ -39,18 +39,18 @@ public class ContextClassLoaderLocal<T> {
     }
 
     /**
+     * 初始化值方法，每次取值如果找不到现在保存的值就会调用此方法生成
      *
-     *
-     * @return
+     * @return 初始化的值
      */
     protected T initialValue() {
         return null;
     }
 
     /**
+     * 从获取与此ClassLoader相关联的对象实例，如果不存在则使用{@link #initialValue()}生成一个
      *
-     *
-     * @return
+     * @return 与此ClassLoader相关联的对象实例
      */
     public synchronized T get() {
         final ClassLoader ccl = getContextClassLoader();
@@ -68,9 +68,9 @@ public class ContextClassLoaderLocal<T> {
     }
 
     /**
+     * 为ClassLoader进行赋值，对象会自动关联到当前类加载器上
      *
-     *
-     * @param value
+     * @param value 与类加载器所关联的值
      */
     public synchronized void set(T value) {
         final ClassLoader ccl = getContextClassLoader();
@@ -105,7 +105,7 @@ public class ContextClassLoaderLocal<T> {
 
         private final Supplier<T> valueSupplier;
 
-        public SuppliedContextClassLoaderLocal(Supplier<T> valueSupplier) {
+        SuppliedContextClassLoaderLocal(Supplier<T> valueSupplier) {
             this.valueSupplier = valueSupplier;
         }
 
