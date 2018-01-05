@@ -1,6 +1,5 @@
 package me.ml3426.xomapper.introspection;
 
-import com.sun.xml.internal.ws.util.StringUtils;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -14,6 +13,8 @@ import java.util.WeakHashMap;
 import me.ml3426.xomapper.ContextClassLoaderLocal;
 import me.ml3426.xomapper.exception.IntropectionRuntimeException;
 import me.ml3426.xomapper.util.LogUtil;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 /**
@@ -92,7 +93,11 @@ public class IntrospectionUtils {
                     setters.add(descriptor);
                 } else {
                     try {
-                        descriptor.setWriteMethod(findBuilderStyleSetter(beanInfo, descriptor));
+                        final Method builderStyleSetter = findBuilderStyleSetter(beanInfo, descriptor);
+                        if (builderStyleSetter != null) {
+                            descriptor.setWriteMethod(builderStyleSetter);
+                            setters.add(descriptor);
+                        }
                     } catch (IntrospectionException ex) {
                         LogUtil.error(() -> "Builder模式setter查询失败", ex);
                     }
